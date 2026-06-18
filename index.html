@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whether UI design </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="div_navbar">
+            <div class="nav_left">
+                <a href="#">home</a>
+                <a href="about.html">about</a>
+            </div>
+            <div class="nav_search">
+                <input type="text" placeholder="Type City | Zip Code" class="search_box" id="search_input">
+                <div class="div_mag" id="search_btn">
+                    <i class="fa-solid fa-magnifying-glass" style="color: rgb(14, 51, 196);"> </i>
+                </div>
+            </div>
+
+        </div>
+    </header>
+    <main class="container">
+        <div class="whether_card">
+            <div class="div_location">
+                <i class="fa-solid fa-location-dot" style="color: rgb(255, 255, 255);"></i>
+            </div>
+
+            <div class="div_city">
+                <p id="city">Delhi, IN</p>
+            </div>
+
+            <div class="div_tempereture">
+                <h1><span id="temp">22</span>°C</h1>
+            </div>
+
+            <div class="div_behaviour">
+                <p id="weather">Cloudy</p>
+                <img id="weather_icon" src="https://cdn-icons-png.flaticon.com/512/1146/1146869.png" alt="weather image"
+                    height="70px">
+            </div>
+            <div class="div_stats">
+
+                <div class="stats_box">
+                    <i class="fa-solid fa-cloud-rain" style="color:whitesmoke"></i>
+                    <h3>30%</h3>
+                    <p>Precipitation</p>
+                </div>
+                <div class="stats_box">
+                    <i class="fa-solid fa-droplet" style="color:whitesmoke"></i>
+                    <h3 id="humidity">30%</h3>
+                    <p>Humidity</p>
+                </div>
+
+                <div class="stats_box">
+                    <i class="fa-solid fa-wind" style="color:whitesmoke"></i>
+                    <h3 id="wind">3 km/h</h3>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </main>
+
+    <script>
+        const apiKey = "a999a05225efc073a791dbaf8dbae3d7";
+
+const cityName = document.getElementById("city");
+const temperature = document.getElementById("temp");
+const weather = document.getElementById("weather");
+const humidity = document.getElementById("humidity");
+const wind = document.getElementById("wind");
+const searchBtn = document.getElementById("search_btn");
+const searchInput = document.getElementById("search_input");
+const weatherIcon = document.getElementById("weather_icon");
+
+async function getWeather(city) {
+
+    const url =
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    const response = await fetch(url);
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if(data.cod == "404"){
+        alert("City not found");
+        return;
+    }
+
+    cityName.innerHTML =
+    `${data.name}, ${data.sys.country}`;
+
+    temperature.innerHTML =
+    Math.round(data.main.temp);
+
+    weather.innerHTML =
+    data.weather[0].main;
+
+    humidity.innerHTML =
+    data.main.humidity + "%";
+
+    wind.innerHTML =
+    data.wind.speed + " km/h";
+
+    const weatherMain = data.weather[0].main;
+
+    if(weatherMain == "Clouds"){
+        weatherIcon.src =
+        "https://cdn-icons-png.flaticon.com/512/414/414825.png";
+    }
+
+    else if(weatherMain == "Clear"){
+        weatherIcon.src =
+        "https://cdn-icons-png.flaticon.com/512/869/869869.png";
+    }
+
+    else if(weatherMain == "Rain"){
+        weatherIcon.src =
+        "https://cdn-icons-png.flaticon.com/512/3351/3351979.png";
+    }
+
+    else if(weatherMain == "Snow"){
+        weatherIcon.src =
+        "https://cdn-icons-png.flaticon.com/512/642/642102.png";
+    }
+
+    else{
+        weatherIcon.src =
+        "https://cdn-icons-png.flaticon.com/512/1146/1146869.png";
+    }
+}
+
+searchBtn.addEventListener("click", () => {
+
+    const city = searchInput.value;
+
+    if(city === ""){
+        alert("Please enter city name");
+        return;
+    }
+
+    getWeather(city);
+
+});
+
+getWeather("Delhi");
+    </script>
+</body>
+
+</html>
